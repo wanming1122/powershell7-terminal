@@ -1,0 +1,4 @@
+{
+  "displayName": "PowerShell 7 Terminal",
+  "brief": "让 agent 的终端命令一律通过 PowerShell 7 (pwsh) 执行"
+}
