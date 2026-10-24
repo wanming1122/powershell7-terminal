@@ -31,3 +31,7 @@ Then place it in a location your agent scans for skills, e.g. `~/.zcode/skills/`
 ## Trigger
 
 Activates whenever the agent is about to execute shell commands, scripts, git, npm, python, or any CLI tool on Windows — or on trigger phrases like 「用 PowerShell 7」「用 pwsh」「执行命令」「跑一下脚本」.
+
+## License
+
+[MIT](LICENSE)

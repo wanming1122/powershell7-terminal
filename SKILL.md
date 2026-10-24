@@ -9,14 +9,14 @@ description: Run every terminal/shell command on this Windows machine through Po
 
 **Every terminal call must execute inside PowerShell 7 (`pwsh`), never directly in the tool's default shell.**
 
-The terminal tool's own shell is Windows PowerShell **5.1**. That is the wrapper only — the actual work must run as a child `pwsh` process.
+The terminal tool's own shell is Windows PowerShell **5.1**. That is the wrapper only — the actual work must run as a child `pwsh` process. If your agent's terminal tool also wraps commands in Windows PowerShell 5.1 (as most Windows coding agents do), everything below applies the same way.
 
 Verified environment:
 
 | Item | Value |
 |------|-------|
 | Tool shell (wrapper) | Windows PowerShell 5.1.26100 Desktop |
-| Target shell | PowerShell 7.6.5 Core |
+| Target shell | PowerShell 7.6.x Core |
 | `pwsh` on PATH | yes |
 | Full path fallback | `%LOCALAPPDATA%\Microsoft\WindowsApps\pwsh.exe` (i.e. `C:\<you>\AppData\Local\Microsoft\WindowsApps\pwsh.exe`) |
 
@@ -68,7 +68,7 @@ Always end with `if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }` (Pattern A) or
 
 Script bodies run under `pwsh`, so PS7-only syntax is allowed — and PS5.1-only habits will break. Differences verified on this machine:
 
-| Feature | PS 5.1 (wrapper) | PS 7.6.5 (pwsh) |
+| Feature | PS 5.1 (wrapper) | PS 7.x (pwsh) |
 |---------|------------------|-----------------|
 | Edition | Desktop | Core |
 | `$IsWindows` | does not exist | `$true` |
@@ -82,7 +82,7 @@ Script bodies run under `pwsh`, so PS7-only syntax is allowed — and PS5.1-only
 
 Notes:
 
-- Use `??` / `??=` / `?:` freely inside `pwsh`. Do **not** use `?.` — it is not implemented even in 7.6.5.
+- Use `??` / `??=` / `?:` freely inside `pwsh`. Do **not** use `?.` — it is not implemented as of 7.6.x.
 - `curl` inside `pwsh` is the real `curl.exe`. Inside the 5.1 wrapper it is `Invoke-WebRequest` — another reason to go through `pwsh`.
 - `$IsWindows` only exists under `pwsh`. In the wrapper use `[Environment]::OSVersion` or `$env:OS` if you must.
 
@@ -130,3 +130,4 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 | `UnexpectedToken: ??` or `?` | body ran in the 5.1 wrapper, not `pwsh` | ensure the body goes through `& pwsh ...` |
 | Exit code always 0 | forgot to propagate | add `if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }` |
 | `pwsh` not recognized | PATH lost in a non-login shell | use the full path fallback above |
+| Cmdlet failed (e.g. `Get-Content` on a missing file) but exit code is still 0 | cmdlet non-terminating errors do not set `$LASTEXITCODE` | end the script body with `if (-not $?) { exit 1 }`, or use try/catch with explicit `exit 1` |
