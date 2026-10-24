@@ -18,7 +18,7 @@ Verified environment:
 | Tool shell (wrapper) | Windows PowerShell 5.1.26100 Desktop |
 | Target shell | PowerShell 7.6.5 Core |
 | `pwsh` on PATH | yes |
-| Full path fallback | `C:\Users\30990\AppData\Local\Microsoft\WindowsApps\pwsh.exe` |
+| Full path fallback | `%LOCALAPPDATA%\Microsoft\WindowsApps\pwsh.exe` (i.e. `C:\<you>\AppData\Local\Microsoft\WindowsApps\pwsh.exe`) |
 
 ## Instructions
 
